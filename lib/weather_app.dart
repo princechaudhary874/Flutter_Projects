@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'hourly_forecast_item.dart';
+import 'addtional_items.dart';
 
 class WeatherScreen extends StatelessWidget {
   const WeatherScreen({super.key});
@@ -94,11 +96,31 @@ class WeatherScreen extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  HourlyForecastItem(),
-                  HourlyForecastItem(),
-                  HourlyForecastItem(),
-                  HourlyForecastItem(),
-                  HourlyForecastItem(),
+                  HourlyForecastItem(
+                    time: '3:00',
+                    icon: Icons.cloud,
+                    temperature: '78°F',
+                  ),
+                  HourlyForecastItem(
+                    time: '6:00',
+                    icon: Icons.sunny_snowing,
+                    temperature: '84.4°F',
+                  ),
+                  HourlyForecastItem(
+                    time: '9:00',
+                    icon: Icons.cloud,
+                    temperature: '81.32°F',
+                  ),
+                  HourlyForecastItem(
+                    time: '12:00',
+                    icon: Icons.sunny_snowing,
+                    temperature: '88.62°F',
+                  ),
+                  HourlyForecastItem(
+                    time: '15:00',
+                    icon: Icons.sunny,
+                    temperature: '93.23°F',
+                  ),
                 ],
               ),
             ),
@@ -107,53 +129,33 @@ class WeatherScreen extends StatelessWidget {
               height: 20,
             ),
             // additional information
-           const Text(
+            const Text(
               'Additional Information',
               style: TextStyle(
                 fontSize: 24,
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// weather forecast card widget
-class HourlyForecastItem extends StatelessWidget {
-  const HourlyForecastItem({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 6,
-      child: Container(
-        width: 100,
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: const Column(
-          children: [
-            Text(
-              '3:00',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Icon(
-              Icons.cloud,
-              size: 32,
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Text('100.03')
+            const SizedBox(height: 8),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                AdditionalItems(
+                  icon: Icons.water_drop,
+                  label: 'Humidity',
+                  value: '99',
+                ),
+                AdditionalItems(
+                  icon: Icons.air,
+                  label: 'Wind Speed',
+                  value: '7.5',
+                ),
+                AdditionalItems(
+                  icon: Icons.beach_access,
+                  label: 'Pressure',
+                  value: '1000',
+                ),
+              ],
+            )
           ],
         ),
       ),

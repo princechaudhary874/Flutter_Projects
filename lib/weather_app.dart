@@ -3,9 +3,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'hourly_forecast_item.dart';
 import 'addtional_items.dart';
+import 'package:http/http.dart' as http;
 
 class WeatherScreen extends StatelessWidget {
   const WeatherScreen({super.key});
+
+  Future getCurrentWeather() async {
+    http.get(Uri.parse());
+  }
 
   @override
   Widget build(BuildContext context) {

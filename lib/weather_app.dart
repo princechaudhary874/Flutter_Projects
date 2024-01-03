@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  double temp = 0;
   @override
   void initState() {
     super.initState();
@@ -21,12 +23,23 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   Future getCurrentWeather() async {
-    String cityName = 'Kathmandu';
-    final result = await http.get(
-      Uri.parse(
-          'https://api.openweathermap.org/data/2.5/forecast?q=$cityName&APPID=$openWeatherAPIKey'),
-    );
-    print(result.body);
+    try {
+      String cityName = 'Kathmandu';
+      final result = await http.get(
+        Uri.parse(
+            'https://api.openweathermap.org/data/2.5/forecast?q=$cityName&APPID=$openWeatherAPIKey'),
+      );
+      final data = jsonDecode(result.body);
+      if (data["cod"] != "200") {
+        throw "An unexpected error occured";
+      }
+      // fetchong data from api of first list and showing it in main card temperature
+      setState(() {
+        temp = (data['list'][0]['main']['temp']) - 273.15;
+      });
+    } catch (e) {
+      throw e.toString();
+    }
   }
 
   @override
@@ -64,30 +77,30 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   borderRadius: BorderRadius.circular(20),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: const Padding(
-                      padding: EdgeInsets.all(15.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
                           Text(
-                            '98.6°F',
-                            style: TextStyle(
+                            '${temp.toStringAsPrecision(3)} °C',
+                            style: const TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           // setting cloud
-                          Icon(
+                          const Icon(
                             Icons.cloud,
                             size: 64,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
 
-                          Text(
+                          const Text(
                             'Rain',
                             style: TextStyle(
                               fontSize: 20,

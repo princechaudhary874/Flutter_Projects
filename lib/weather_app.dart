@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'hourly_forecast_item.dart';
 import 'addtional_items.dart';
 import 'package:weather_apps/secrets.dart';
@@ -15,14 +16,14 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  final TextEditingController textEditingController = TextEditingController();
+  // final TextEditingController textEditingController = TextEditingController();
 
   Future<Map<String, dynamic>> getCurrentWeather() async {
     try {
-      String cityName = textEditingController.text.isNotEmpty
-          ? textEditingController.text
-          : 'Kathmandu';
-
+      // String cityName = textEditingController.text.isNotEmpty
+      //     ? textEditingController.text
+      //     : 'Kathmandu';
+      String cityName = 'Kathmandu';
       final result = await http.get(
         Uri.parse(
             'https://api.openweathermap.org/data/2.5/forecast?q=$cityName&APPID=$openWeatherAPIKey'),
@@ -50,6 +51,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Appbar Section
       appBar: AppBar(
         title: const Text(
           'Weather App',
@@ -96,32 +98,33 @@ class _WeatherScreenState extends State<WeatherScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // main card
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: TextField(
-                      controller: textEditingController,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20, // Text color inside the TextField
-                      ),
-                      decoration:  InputDecoration(
-                        hintText: 'Enter your city',
-                        hintStyle:const TextStyle(color: Colors.white60),
-                        prefixIcon: IconButton(
-                          icon:const Icon(Icons.search),
-                          onPressed: () {setState(() {
-                             getCurrentWeather();
-                          });
-                           
-                          },
-                        ),
-                        prefixIconColor: Colors.white,
-                        filled: true,
-                        fillColor: Colors.black,
-                      ),
-                    ),
-                  ),
+                  // searchbox
+                  //   Padding(
+                  //     padding: const EdgeInsets.all(10.0),
+                  //     child: TextField(
+                  //       controller: textEditingController,
+                  //       style: const TextStyle(
+                  //         color: Colors.white,
+                  //         fontSize: 20, // Text color inside the TextField
+                  //       ),
+                  //       decoration: InputDecoration(
+                  //         hintText: 'Enter your city',
+                  //         hintStyle: const TextStyle(color: Colors.white60),
+                  //         prefixIcon: IconButton(
+                  //           icon: const Icon(Icons.search),
+                  //           onPressed: () {
+                  //             setState(() {
+                  //               getCurrentWeather();
+                  //             });
+                  //           },
+                  //         ),
+                  //         prefixIconColor: Colors.white,
+                  //         filled: true,
+                  //         fillColor: Colors.black,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // // main card
                   SizedBox(
                     width: double.infinity,
                     child: Card(
@@ -185,27 +188,48 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (int i = 0; i < 20; i++)
-                          HourlyForecastItem(
-                            time: data['list'][i + 1]['dt'].toString(),
-                            icon: ((data['list'][i + 1]['weather'][0]['main'] ==
-                                        'Clouds') ||
-                                    (data['list'][i + 1]['weather'][0]
-                                            ['main'] ==
-                                        "Rain"))
-                                ? Icons.cloud
-                                : Icons.sunny,
-                            temperature:
-                                data['list'][i + 1]['main']['temp'].toString(),
-                          ),
-                      ],
+                  // SingleChildScrollView(
+                  //   scrollDirection: Axis.horizontal,
+                  //   child: Row(
+                  //     children: [
+                  //       for (int i = 0; i < 20; i++)
+                  //         HourlyForecastItem(
+                  //           time: data['list'][i + 1]['dt'].toString(),
+                  //           icon: ((data['list'][i + 1]['weather'][0]['main'] ==
+                  //                       'Clouds') ||
+                  //                   (data['list'][i + 1]['weather'][0]
+                  //                           ['main'] ==
+                  //                       "Rain"))
+                  //               ? Icons.cloud
+                  //               : Icons.sunny,
+                  //           temperature:
+                  //               data['list'][i + 1]['main']['temp'].toString(),
+                  //         ),
+                  //     ],
+                  //   ),
+                  // ),
+                  SizedBox(
+                    height: 120,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        final hourlyForecast = data['list'][index + 1];
+                        final hourlySky = hourlyForecast['weather'][0]['main'];
+                        final hourlyTemperature =
+                            hourlyForecast['main']['temp'].toString();
+                        final time = DateTime.parse(hourlyForecast['dt_txt']);
+                        return HourlyForecastItem(
+                          time: DateFormat.Hm().format(time),
+                          icon:
+                              ((hourlySky == 'Clouds') || (hourlySky == "Rain"))
+                                  ? Icons.cloud
+                                  : Icons.sunny,
+                          temperature: hourlyTemperature,
+                        );
+                      },
                     ),
                   ),
-
                   const SizedBox(
                     height: 20,
                   ),

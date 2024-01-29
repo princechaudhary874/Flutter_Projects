@@ -141,7 +141,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             child: Column(
                               children: [
                                 Text(
-                                  '${currentWeather.toString()} K',
+                                  '${(currentWeather-273).toStringAsFixed(2) } °C',
                                   style: const TextStyle(
                                     fontSize: 32,
                                     fontWeight: FontWeight.bold,

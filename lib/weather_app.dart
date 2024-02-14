@@ -23,7 +23,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       // String cityName = textEditingController.text.isNotEmpty
       //     ? textEditingController.text
       //     : 'Kathmandu';
-      String cityName = 'Kathmandu';
+      String cityName = 'kathmandu';
       final result = await http.get(
         Uri.parse(
             'https://api.openweathermap.org/data/2.5/forecast?q=$cityName&APPID=$openWeatherAPIKey'),
